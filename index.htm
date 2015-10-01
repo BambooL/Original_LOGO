@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<title>Logo Interpreter</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="alternate" type="application/atom+xml" href="https://github.com/inexorabletash/jslogo/commits/master.atom">
+
+<script src="polyfill/polyfill.js"></script>
+
+<!-- CodeMirror, add-ons, and Logo-specific highlighting -->
+<script src=" http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/codemirror.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/addon/runmode/runmode.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/addon/edit/closebrackets.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/addon/edit/matchbrackets.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/addon/display/placeholder.min.js"></script>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/codemirror.css">
+<script src="cm/logo.js"></script>
+
+<link rel="stylesheet" href="cm/logo.css">
+
+<link rel="stylesheet" href="index.css">
+
+<body class="single">
+
+<div id="topbar" class="panel">
+
+<script language="JavaScript" type="text/javascript" src="eliza.js"></script>
+<script language="JavaScript" type="text/javascript" src="elizadata.js"></script>
+<script language="JavaScript" type="text/javascript">
+
+// save
+
+for (var i = 0; i < langs.length; i++) {
+  select_language.options[i] = new Option(langs[i][0], i);
+}
+select_language.selectedIndex = 6;
+updateCountry();
+select_dialect.selectedIndex = 6;
+showInfo('info_start');
+
+function updateCountry() {
+  for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+    select_dialect.remove(i);
+  }
+  var list = langs[select_language.selectedIndex];
+  for (var i = 1; i < list.length; i++) {
+    select_dialect.options.add(new Option(list[i][1], list[i][0]));
+  }
+  select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+}
+
+var final_transcript = '';
+var recognizing = false;
+var ignore_onend;
+var start_timestamp;
+if (!('webkitSpeechRecognition' in window)) {
+  upgrade();
+} else {
+  start_button.style.display = 'inline-block';
+  var recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onstart = function() {
+    recognizing = true;
+    showInfo('info_speak_now');
+    start_img.src = 'mic-animate.gif';
+  };
+
+  recognition.onerror = function(event) {
+    if (event.error == 'no-speech') {
+      start_img.src = 'mic.gif';
+      showInfo('info_no_speech');
+      ignore_onend = true;
+    }
+    if (event.error == 'audio-capture') {
+      start_img.src = 'mic.gif';
+      showInfo('info_no_microphone');
+      ignore_onend = true;
+    }
+    if (event.error == 'not-allowed') {
+      if (event.timeStamp - start_timestamp < 100) {
+        showInfo('info_blocked');
+      } else {
+        showInfo('info_denied');
+      }
+      ignore_onend = true;
+    }
+  };
+
+  recognition.onend = function() {
+    recognizing = false;
+    if (ignore_onend) {
+      return;
+    }
+    start_img.src = 'mic.gif';
+    if (!final_transcript) {
+      showInfo('info_start');
+      return;
+    }
+    showInfo('');
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+      var range = document.createRange();
+      range.selectNode(document.getElementById('final_span'));
+      window.getSelection().addRange(range);
+    }
+    if (create_email) {
+      create_email = false;
+      createEmail();
+    }
+  };
+
+  recognition.onresult = function(event) {
+    var interim_transcript = '';
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript += event.results[i][0].transcript;
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+      }
+    }
+    final_transcript = capitalize(final_transcript);
+    final_span.innerHTML = linebreak(final_transcript);
+    interim_span.innerHTML = linebreak(interim_transcript);
+    if (final_transcript || interim_transcript) {
+      showButtons('inline-block');
+    }
+  };
+}
+
+function startButton(event) {
+  if (recognizing) {
+    recognition.stop();
+    return;
+  }
+  final_transcript = '';
+  recognition.lang = select_dialect.value;
+  recognition.start();
+  ignore_onend = false;
+  final_span.innerHTML = '';
+  interim_span.innerHTML = '';
+  start_img.src = 'mic-slash.gif';
+  showInfo('info_allow');
+  showButtons('none');
+  start_timestamp = event.timeStamp;
+}
+
+function showInfo(s) {
+  if (s) {
+    for (var child = info.firstChild; child; child = child.nextSibling) {
+      if (child.style) {
+        child.style.display = child.id == s ? 'inline' : 'none';
+      }
+    }
+    info.style.visibility = 'visible';
+  } else {
+    info.style.visibility = 'hidden';
+  }
+}
+
+
+
+function saveAsLocalImage () {  
+                var canvas = document.querySelector('#sandbox');
+                var url = canvas.toDataURL('image/png');
+                if (!saveDataAs(url, 'logo_drawing.png'))
+                  alert("Sorry, not supported by your browser");
+            }   
+
+
+// </script>
+
+  <h1>PiE-LOGO</h1>
+ <button id="downloadImageBtn" onclick="saveAsLocalImage()">Download Image</button>  
+
+
+</div>
+
+<div id="display-panel" class="panel">
+  <div id="display">
+    <div class="inner">
+      <canvas id="sandbox" width="450" height="250">
+        <span>Your browser does not support the canvas element - sorry!</span>
+      </canvas>
+      <canvas id="turtle" width="450" height="250"></canvas>
+      <div id="overlay"></div>
+      <div id="error"></div>
+    </div>
+  </div>
+</div>
+<div id="dialogue-panel" class="panel">
+  <div id="dialogue">
+    <div class="button">
+        <textarea rows="10" cols="120" placeholder="Response" id="response"></textarea> 
+    </div> 
+  </div>                       
+</div>
+
+
+<div id="input-panel" class="panel">
+
+  <!-- TODO: Make this a button or anchor -->
+  <div id="run"><div class="label">Talk</div></div>
+   
+  <div id="input">
+    <div class="inner">
+      <div id="toggle">
+        <span id="expand-label">&#x2197;</span>
+        <span id="collapse-label">&#x2199;</span>
+      </div>
+      <textarea rows="1" cols="80" placeholder="Type your commands here..." id="logo-ta-single-line"></textarea>
+      <textarea rows="20" cols="80" placeholder="Type your commands here..." id="logo-ta-multi-line"></textarea>
+    </div>                        
+  </div>
+</div>
+
+
+
+<div id="sidebar-header" class="panel">
+
+  <ul>
+    <li><a id="sb-link-reference" href="#">Tutorial</a> - Programming in Eliza
+    <li><a id="sb-link-library" href="#">Library</a> - your procedures
+    <li><a id="sb-link-history" href="#">History</a> - everything you&apos;ve done here
+    <li><a id="sb-link-examples" href="#">Examples</a> - fun things to try out
+  </ul>
+</div>
+
+<div id="sidebar" class="panel examples">
+  <iframe frameBorder="0" allowtransparency="true" src="tutorial.htm" class="choice" id="reference"></iframe>
+  <div class="choice snippets" id="examples">
+  </div>
+  <div class="choice snippets" id="history">
+    <!-- TODO: Add "clear history" button -->
+  </div>
+  <div class="choice snippets" id="library">
+  </div>
+
+
+</div>
+
+<script src="floodfill.js"></script>
+<script src="logo.js"></script>
+<script src="turtle.js"></script>
+<script src="index.js"></script>
+<script src="eliza.js"></script>
+<script src="elizadata.js"></script>
+<!-- TogetherJS Collaboration -->
+<script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-18610679-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</body>
