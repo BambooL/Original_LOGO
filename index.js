@@ -214,31 +214,31 @@ var input = {};
     var error = $('#display #error');
     error.classList.remove('shown');
 
-    // var v = input.getValue();
-    // if (v === '') {
-    //   return;
-    // } 
-    // "Can you forward 100 steps↵turn left "
-    var nl = input.getValue();
-    if (nl === '') {
+    var v = input.getValue();
+    if (v === '') {
       return;
     } 
+    // "Can you forward 100 steps↵turn left "
+    // var nl = input.getValue();
+    // if (nl === '') {
+    //   return;
+    // } 
 
-      // v=eliza.transform("can you go forward 100 steps")[0];
+    //   // v=eliza.transform("can you go forward 100 steps")[0];
     
-    var eliza = new ElizaBot();
-    // console.log(eliza.transform("can you go forward 100 steps")[1]);
-    var split= nl.split("\n")
-    var v="";
-    var dialogue="";
-    for (var i=0; i<split.length; i++) {
-      v=v+eliza.transform(split[i])[1]+"\n";
-      dialogue=dialogue+eliza.transform(split[i])[0]+"\n";
-    }
-    // var v=eliza.transform(nl)[1]
-    document.all.response.value=dialogue;
-    // var v=elizaStep();
-    console.log("before "+v);
+    // var eliza = new ElizaBot();
+    // // console.log(eliza.transform("can you go forward 100 steps")[1]);
+    // var split= nl.split("\n")
+    // var v="";
+    // var dialogue="";
+    // for (var i=0; i<split.length; i++) {
+    //   v=v+eliza.transform(split[i])[1]+"\n";
+    //   dialogue=dialogue+eliza.transform(split[i])[0]+"\n";
+    // }
+    // // var v=eliza.transform(nl)[1]
+    // document.all.response.value=dialogue;
+    // // var v=elizaStep();
+    // console.log("before "+v);
     v=substitution(v, commandHistory);
     commandHistory.push(v);
     // console.log(typeof(commandHistory));
