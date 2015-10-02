@@ -176,15 +176,15 @@ sup {
 <li>Next, let's try move the turtle quicker and more fluently by using repeat.</li>
 <li>Type in <code>REPEAT 3 [FD 150 LT 90]</code>.</li>
 <li>Yeah! You got a square! right?</li>
-<li>You can clear the screen by <code>Clear the screen!</code></li>
+<li>You can clear the screen by <code>CS</code></li>
 </ul>
 
 <h4>Move the turtle</h4>
 
 <ul>
-<li>Basically, the turtle can move forward and backward. Try <code>Go forward 150 steps!</code> and <code>Get back 150 Steps</code>.</li>
-<li>Besides, staight move, the turtle can turn clockwise(right) or anti-clockwise(left). Try <code>Turn left 90 degrees</code> and <code>Turn right 90 degrees</code>. You can name any degree between 0 to 360. In addition, try <code>Turn left.</code> and <code>Turn right</code>. The turtle will by default turn 90 degrees.</li>
-<li>If you do not want the pattern any more, just <code>Clear the screen!</code>!</li>
+<li>Basically, the turtle can move forward and backward. Try <code>FD 150</code> and <code>BK 150</code>.</li>
+<li>Besides, staight move, the turtle can turn clockwise(right) or anti-clockwise(left). Try <code>LT 90</code> and <code>RT 90</code>. You can name any degree between 0 to 360.</li>
+<li>If you do not want the pattern any more, just <code>CS</code>!</li>
 </ul>
 
 
@@ -192,14 +192,14 @@ sup {
 
 <ul>
 <li>The turtle can draw with its movements. If you want to change how the trace looks like, please go on with this section.</li>
-<li>First, let's try to make the line bolder. Type in <code>Can you use a bolder pen?</code> and then try <code>Go forward 100 steps!</code>. How it look?
-<li>Then, let's make the line lighter. Type in <code>Use a lighter pen</code> and try again <code>Go forward 100 steps!</code>. See the difference?
-<li>You can also change the color of the line by <code>Can you change to color red?</code>. You can change to any other colors like: <code>grey</code> <code>purple</code> <code>green</code> <code>yellow</code> <code>black</code> <code>blue</code> <code>red</code>.</li>
-<li>Test with <code>Forward 100 steps</code>. Your turtle might hit the wall if you continued three 100 step forward. After it hit the wall, it will appear from the other side.
+<li>First, let's try to make the line bolder. Type in <code>SETPENSIZE PENSIZE + 1</code> and then try <code>FD 15</code>. How it look?
+<li>Then, let's make the line lighter. Type in <code>SETPENSIZE PENSIZE - 1</code> and try again <code>FD 150</code>. See the difference?
+<li>You can also change the color of the line by <code>SETPENCOLOR 4</code>. You can change to any other colors like: <code>grey 15</code> <code>purple 13</code> <code>green 2</code> <code>yellow 6</code> <code>black 0</code> <code>blue 1</code> <code>red 4</code>.</li>
+<li>Test with <code>FD 150</code>. Your turtle might hit the wall if you continued three 150 step forward. After it hit the wall, it will appear from the other side.
 <li>Sometimes, you just want to move the turtle but not leave any traces. In this case, let's suspend the turtle.</li>
-<li>Suspend the turtle by <code>Get up!</code> and the turtle will be off the canvas. There will be no trace left when the turtle is off the paper. You can try <code>Can you forward 50 steps?</code> to double check.</li>
-<li>Put down the turtle by <code>Get down!</code></li>
-<li>Test with <code>Forward 100 steps</code>
+<li>Suspend the turtle by <code>PENUP</code> and the turtle will be off the canvas. There will be no trace left when the turtle is off the paper. You can try <code>FD 50</code> to double check.</li>
+<li>Put down the turtle by <code>PENDOWN</code></li>
+<li>Test with <code>FD 100</code>
 </ul>
 
 
@@ -211,19 +211,19 @@ sup {
 <h5>Loop</h5></li>
 <li>Loop is a faster way to get things done if you want to repeat several commands over and over again. Let's see how to use it.
 <li>First, let's try these commands one by one.
-    <code>Forward 150 steps</code>
-    <code>Turn left 90 degrees</code>
-    <code>Forward 150 steps</code>
-    <code>Turn left 90 degrees</code>
-    <code>Forward 150 steps</code>
-    <code>Turn left 90 degrees</code>
-    <code>Forward 150 steps</code>
-    <code>Turn left 90 degrees</code>
+    <code>FD 150</code>
+    <code>LT 90</code>
+    <code>FD 150</code>
+    <code>LT 90</code>
+    <code>FD 150</code>
+    <code>LT 90</code>
+    <code>FD 150</code>
+    <code>LT 90</code>
     What do you get? A square! But how to use less commands to realize the same thing?</li>
 <li>Try these commands one by one<br/>
-<code>Go forward 100 steps.</code>
-<code>Turn left</code>
-<code>can you repeat last 2 commands for 3 times?</code></li>
+<code>FD 150</code>
+<code>LT 90</code>
+<code>REPEAT 3 [FD 150 LT 90]</code></li>
 <li>You see. We use 3 commands to draw a square instead of 8 commands.
 
 <h5>Function</h5></li>
@@ -231,19 +231,16 @@ sup {
 <li>Function helps to reuse some capsulated commands. Try the following commands:</li>
 </ul>
 
-<pre><code>  Let's define a function called Square
-    Repeat the following commands for 4 times
-        Go forward 100 Steps        
-        Turn left 90 degrees
-    End the Repeat
-  End the function
-  Then Clear the screen
-  Call the function square
+<pre><code>  TO Square 
+    REPEAT 4 [ FD 150 LT 90]
+  END
+  CS
+  Square
 </code></pre>
 
 <li>To experience the benefit from Function, you can go on with</li>
-<pre><code>  Turn right 60 degrees
-  Again, Call the function square 
+<pre><code>  RT 60
+  Square
 </code></pre>
 
 <h3>Write in Scripts</h3>
@@ -253,29 +250,20 @@ sup {
 </ul>
 
 
-<pre><code>Use a red pen
-Let the pen be bolder
-Repeat the following commands for 4 times
-  Go forward 100 Steps
-  Turn left 90 degrees
-End the Repeat
+<pre><code>SETPENCOLOR 4
+SETPENSIZE PENSIZE + 1
+REPEAT 4 [ FD 150 LT 90]
 </code></pre>
 
 <ul>
 <li>After the copy-paste, click on the <code>Talk</code> button. What do you get?</li>
-<li>You can revise the script in the <code>Multi-line mode</code> by adding or deleting in the box. Try add <code>Repeat the following commands for 36 times</code> after <code>Let the pen be bolder</code> and <code>Turn left 10 degrees</code> and <code>End the repeat</code> after the original <code>End the Repeat</code>. What do you get?</li>
+<li>You can revise the script in the <code>Multi-line mode</code> by adding or deleting in the box. Try add <code>REPEAT 36 [</code> after <code>SETPENSIZE PENSIZE + 1</code> and <code>LT 10</code> and <code>]</code> after the original <code>]</code>. What do you get?</li>
 </ul>
 
 
-<pre><code>Use a red pen
-Let the pen be bolder
-Repeat the following commands for 36 times
-  Repeat the following commands for 4 times
-    Go forward 100 Steps
-    Turn left 90 degrees
-    End the first Repeat
-  Turn left 10 degrees
-End the second repeat
+<pre><code>SETPENCOLOR 4
+SETPENSIZE PENSIZE + 1
+REPEAT 36 [ REPEAT 4 [ FD 150 LT 90]]
 </code></pre>
 
 <ul>
