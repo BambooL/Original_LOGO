@@ -44,6 +44,17 @@ var logo, turtle;
 //
 var savehook;
 var historyhook;
+var history_record = {};
+
+function generateDownloadLink(file_name, file_content){
+  var json = JSON.stringify(file_content);
+  var blob = new Blob([json], {type: "application/json"});
+  var url  = URL.createObjectURL(blob);
+  var a = $('#download_link');
+  a.download    = file_name;
+  a.href        = url;
+  a.textContent = "save history";
+}
 
 function initStorage(loadhook) {
   if (!window.indexedDB)
@@ -240,6 +251,12 @@ var input = {};
     // // var v=elizaStep();
     // console.log("before "+v);
     v=substitution(v, commandHistory);
+    var index = Date.now();
+    history_record[index] = {};
+    history_record[index]["username"] = sessionStorage.getItem("username");
+    history_record[index]["content"] = v;
+    var file_name = sessionStorage.getItem("username") + "_history";
+    generateDownloadLink(file_name, history_record);
     commandHistory.push(v);
     // console.log(typeof(commandHistory));
     if (!isMulti()) {
@@ -626,18 +643,18 @@ window.addEventListener('load', function() {
     return true;
   }
 
-  $('#savelibrary').addEventListener('click', function() {
-    var library = logo.procdefs().replace('\n', '\r\n');
-    var url = 'data:text/plain,' + encodeURIComponent(library);
-    if (!saveDataAs(url, 'logo_library.txt'))
-      alert("Sorry, not supported by your browser");
-  });
-  $('#screenshot').addEventListener('click', function() {
-    var canvas = document.querySelector('#sandbox');
-    var url = canvas.toDataURL('image/png');
-    if (!saveDataAs(url, 'logo_drawing.png'))
-      alert("Sorry, not supported by your browser");
-  });
+  // $('#savelibrary').addEventListener('click', function() {
+  //   var library = logo.procdefs().replace('\n', '\r\n');
+  //   var url = 'data:text/plain,' + encodeURIComponent(library);
+  //   if (!saveDataAs(url, 'logo_library.txt'))
+  //     alert("Sorry, not supported by your browser");
+  // });
+  // $('#screenshot').addEventListener('click', function() {
+  //   var canvas = document.querySelector('#sandbox');
+  //   var url = canvas.toDataURL('image/png');
+  //   if (!saveDataAs(url, 'logo_drawing.png'))
+  //     alert("Sorry, not supported by your browser");
+  // });
 
   function demo(param) {
     param = String(param);

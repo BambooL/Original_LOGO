@@ -9,10 +9,11 @@ B. No
 C. Yes, but not that clear
 ```
 ```
-2. Do you have any programming experience? If yes, how long?
+2. Do you have any programming experience? If yes, which language? how long?
 A. Yes
 B. No
 C. Years:
+D. Language:
 ```
 
 ```
