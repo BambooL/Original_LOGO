@@ -1,4 +1,4 @@
-## Post-Study Survey
+## Post-Study Survey 
 
 This is a test for evaluating your understanding on programming after a short tutorial, either in LOGO or PiE-LOGO. We will only use it for this user study and later research purpose. Please answer every question honestly and patiently. Thank you!
  
@@ -23,7 +23,7 @@ F. I'm not sure
 ```
 
 ```
-3. The turtle cannot move a few steps in one move:
+3. The turtle cannot move a few steps in one command:
 A. To the front
 B. To the back
 C. To the left
