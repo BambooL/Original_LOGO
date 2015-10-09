@@ -160,7 +160,11 @@ function showInfo(s) {
   }
 }
 
-
+function submitUsername() {
+  var username = $("#username").value;
+  sessionStorage.setItem('username', username);
+  $("#username-panel").innerHTML = "current user: " + username;
+}
 
 function saveAsLocalImage () {  
                 var canvas = document.querySelector('#sandbox');
